@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./components/app/app";
 import { Settings } from "./const";
+import { offers } from "./mocks/offers";
+import { offersList } from "./mocks/offers-list";
 
 const root = createRoot(document.getElementById("root") as HTMLElement);
 

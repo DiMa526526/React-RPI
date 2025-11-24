@@ -1,0 +1,165 @@
+import { OffersList } from "../types/offer";
+
+export const offersList: OffersList[] = [
+  {
+    id: "bbb06a0e-3f92-446d-9a68-cb64b5d38e2b",
+    title: "Wood and stone place",
+    type: "apartment",
+    price: 370,
+    previewImage: "/img/H1.jpg",
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.868610000000004,
+      longitude: 2.342499,
+      zoom: 16,
+    },
+    isFavorite: true,
+    isPremium: false,
+    rating: 4.9,
+  },
+  {
+    id: "ccc16b1f-4g03-557e-0b79-dc75b6d49f3c",
+    title: "Beautiful & luxurious apartment",
+    type: "apartment",
+    price: 220,
+    previewImage: "/img/H2.jpg",
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.858610000000004,
+      longitude: 2.352499,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: true,
+    rating: 4.8,
+  },
+  {
+    id: "ddd26c2g-5h14-668f-1c80-ed86c7e50g4d",
+    title: "Cozy studio in city center",
+    type: "room",
+    price: 120,
+    previewImage: "/img/H3.jpg",
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.860610000000004,
+      longitude: 2.354499,
+      zoom: 16,
+    },
+    isFavorite: true,
+    isPremium: false,
+    rating: 4.5,
+  },
+  {
+    id: "eee36d3h-6i25-779g-2d91-fe97d8f61h5e",
+    title: "Modern house with great view",
+    type: "house",
+    price: 450,
+    previewImage: "/img/H4.jpg",
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.862610000000004,
+      longitude: 2.356499,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: true,
+    rating: 4.9,
+  },
+  {
+    id: "fff46e4i-7j36-880h-3e02-gf08e9g72i6f",
+    title: "Charming hotel in historic district",
+    type: "hotel",
+    price: 180,
+    previewImage: "/img/H5.jpg",
+    city: {
+      name: "Paris",
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.864610000000004,
+      longitude: 2.358499,
+      zoom: 16,
+    },
+    isFavorite: true,
+    isPremium: false,
+    rating: 4.7,
+  },
+  {
+    id: "ggg56f5j-8k47-991i-4fa3-hg19f0h83j7g",
+    title: "Beautiful loft in city center",
+    type: "house",
+    price: 420,
+    previewImage: "/img/H6.jpg",
+    city: {
+      name: "Amsterdam",
+      location: {
+        latitude: 52.370216,
+        longitude: 4.895168,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 52.375216,
+      longitude: 4.900168,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: true,
+    rating: 4.7,
+  },
+  {
+    id: "hhh66g6k-9l58-002j-5gb4-ih20g1i94k8h",
+    title: "Cozy countryside cottage",
+    type: "room",
+    price: 290,
+    previewImage: "/img/H7.jpg",
+    city: {
+      name: "Brussels",
+      location: {
+        latitude: 50.850346,
+        longitude: 4.351721,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 50.860346,
+      longitude: 4.361721,
+      zoom: 14,
+    },
+    isFavorite: true,
+    isPremium: false,
+    rating: 4.8,
+  },
+];
