@@ -1,4 +1,4 @@
-type OfferLocation = {
+export type OfferLocation = {
   latitude: number;
   longitude: number;
   zoom: number;

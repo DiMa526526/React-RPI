@@ -5,9 +5,9 @@ import { Login } from "../../pages/login/login";
 import { Favorites } from "../../pages/favorites/favorites";
 import { Offer } from "../../pages/offer/offer";
 import { NotFound } from "../../pages/not-found/not-found";
-import { PrivateRoute } from "../private-route/private-route";
 import { offersList } from "../../mocks/offers-list";
 import { offers } from "../../mocks/offers";
+import { ReviewList } from "../../mocks/mock-reviews";
 
 type AppMainPageProps = {
   rentalOffersCount: number;
@@ -33,7 +33,13 @@ function App({ rentalOffersCount }: AppMainPageProps): React.JSX.Element {
 
         <Route
           path={`${AppRoute.Offer}/:id`}
-          element={<Offer offers={offers} offersList={offersList} />}
+          element={
+            <Offer
+              offers={offers}
+              offersList={offersList}
+              reviewList={ReviewList}
+            />
+          }
         />
 
         <Route path="*" element={<NotFound />} />

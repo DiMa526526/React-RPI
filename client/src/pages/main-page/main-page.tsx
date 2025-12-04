@@ -3,6 +3,7 @@ import { CitiesCardList } from "../../components/cities-card-list/cities-card-li
 import { OffersList } from "../../types/offer";
 import { Link } from "react-router-dom";
 import { Header } from "../../components/header/header";
+import Map from "../../components/map/map";
 
 type MainPageProps = {
   rentalOffersCount: number;
@@ -13,6 +14,18 @@ function MainPage({
   rentalOffersCount,
   offersList,
 }: MainPageProps): React.JSX.Element {
+  const currentCity =
+    offersList.length > 0
+      ? offersList[0].city
+      : {
+          name: "Amsterdam",
+          location: {
+            latitude: 52.370216,
+            longitude: 4.895168,
+            zoom: 13,
+          },
+        };
+
   return (
     <div className="page page--gray page--main">
       <Header offersList={offersList} />
@@ -60,7 +73,7 @@ function MainPage({
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {rentalOffersCount} places to stay in Amsterdam
+                {rentalOffersCount} places to stay in {currentCity.name}
               </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
@@ -93,7 +106,9 @@ function MainPage({
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map cityLocation={currentCity.location} offers={offersList} />
+              </section>
             </div>
           </div>
         </div>
@@ -101,4 +116,5 @@ function MainPage({
     </div>
   );
 }
+
 export { MainPage };
