@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { OffersList } from "../../types/offer";
 
-type CitiesCardProps = Omit<OffersList, "city" | "location"> & {
+type CitiesCardProps = OffersList & {
   cardClassName?: string;
+  onCardHover?: (id: string | null) => void;
 };
 
 export function CitiesCard({
@@ -15,9 +15,8 @@ export function CitiesCard({
   isPremium,
   rating,
   cardClassName = "cities__card",
+  onCardHover,
 }: CitiesCardProps) {
-  const [, setOfferId] = useState<string>("");
-
   const displayType =
     type === "apartment"
       ? "Apartment"
@@ -30,11 +29,19 @@ export function CitiesCard({
     "__image-wrapper"
   );
 
+  const handleMouseEnter = () => {
+    onCardHover?.(id);
+  };
+
+  const handleMouseLeave = () => {
+    onCardHover?.(null);
+  };
+
   return (
     <article
       className={`${cardClassName} place-card`}
-      onMouseOver={() => setOfferId(id)}
-      onMouseOut={() => setOfferId("")}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {isPremium && (
         <div className="place-card__mark">

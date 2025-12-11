@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 import { FullOffer, OffersList } from "../../types/offer";
 import { NotFound } from "../not-found/not-found";
 import { Header } from "../../components/header/header";
@@ -16,12 +17,17 @@ type OfferProps = {
 
 function Offer({ offers, offersList, reviewList }: OfferProps) {
   const params = useParams();
+  const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
   const offer = offers.find((item) => item.id === params.id);
   if (!offer) {
     return <NotFound />;
   }
 
-  const nearOffers = offersList.filter((item) => item.id !== offer.id);
+  const nearOffers = offersList
+    .filter(
+      (item) => item.id !== offer.id && item.city.name === offer.city.name
+    )
+    .slice(0, 3);
 
   return (
     <div className="page">
@@ -127,7 +133,11 @@ function Offer({ offers, offersList, reviewList }: OfferProps) {
             </div>
           </div>
           <section className="offer__map map">
-            <Map cityLocation={offer.location} offers={nearOffers} />
+            <Map
+              cityLocation={offer.location}
+              offers={nearOffers}
+              hoveredOfferId={hoveredOfferId}
+            />
           </section>
         </section>
         <div className="container">
@@ -139,6 +149,7 @@ function Offer({ offers, offersList, reviewList }: OfferProps) {
               offersList={nearOffers}
               wrapperClassName="near-places__list places__list"
               cardClassName="near-places__card"
+              onCardHover={setHoveredOfferId}
             />
           </section>
         </div>

@@ -1,5 +1,3 @@
-// pages/favorites.tsx
-import { Logo } from "../../components/logo/logo";
 import { offersList } from "../../mocks/offers-list";
 import { Header } from "../../components/header/header";
 import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";

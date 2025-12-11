@@ -1,32 +1,61 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import useMap from "../../hooks/useMap";
 import { OfferLocation, OffersList } from "../../types/offer";
 import "leaflet/dist/leaflet.css";
 import * as leaflet from "leaflet";
 
+declare module "leaflet" {
+  interface Marker {
+    offerId?: string;
+  }
+}
+
 type MapProps = {
   cityLocation: OfferLocation;
   offers: OffersList[];
+  hoveredOfferId?: string | null;
 };
 
-function Map({ cityLocation, offers }: MapProps): React.JSX.Element {
+function Map({
+  cityLocation,
+  offers,
+  hoveredOfferId,
+}: MapProps): React.JSX.Element {
   const mapRef = useRef<HTMLDivElement>(null);
   const map = useMap(mapRef, cityLocation);
   const markersRef = useRef<leaflet.Marker[]>([]);
 
-  const defaultCustomIcon = leaflet.icon({
-    iconUrl:
-      "https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg",
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
+  const defaultCustomIcon = useMemo(
+    () =>
+      leaflet.icon({
+        iconUrl:
+          "https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      }),
+    []
+  );
 
-  const hoverCustomIcon = leaflet.icon({
-    iconUrl:
-      "https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg",
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
+  const hoverCustomIcon = useMemo(
+    () =>
+      leaflet.icon({
+        iconUrl:
+          "https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      }),
+    []
+  );
+
+  useEffect(() => {
+    return () => {
+      if (map) {
+        markersRef.current.forEach((marker) => {
+          map.removeLayer(marker);
+        });
+      }
+    };
+  }, [map]);
 
   useEffect(() => {
     if (!map) return;
@@ -45,6 +74,8 @@ function Map({ cityLocation, offers }: MapProps): React.JSX.Element {
         }
       );
 
+      marker.offerId = offer.id;
+
       marker
         .on("mouseover", () => {
           marker.setIcon(hoverCustomIcon);
@@ -59,12 +90,14 @@ function Map({ cityLocation, offers }: MapProps): React.JSX.Element {
   }, [map, offers, defaultCustomIcon, hoverCustomIcon]);
 
   useEffect(() => {
-    return () => {
-      if (map) {
-        markersRef.current.forEach((marker) => map.removeLayer(marker));
+    markersRef.current.forEach((marker) => {
+      if (marker.offerId === hoveredOfferId) {
+        marker.setIcon(hoverCustomIcon);
+      } else {
+        marker.setIcon(defaultCustomIcon);
       }
-    };
-  }, [map]);
+    });
+  }, [hoveredOfferId, defaultCustomIcon, hoverCustomIcon]);
 
   return (
     <div

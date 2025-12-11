@@ -1,3 +1,5 @@
+import { CityOffer } from "./types/offer";
+
 const Settings = {
   rentOffersCount: 312,
 } as const;
@@ -15,6 +17,55 @@ const AuthorizationStatus = {
   Unknown: "UNKNOWN",
 };
 
-export { Settings };
-export { AppRoute };
-export { AuthorizationStatus };
+const CITIES_LOCATION: CityOffer[] = [
+  {
+    name: "Paris",
+    location: {
+      latitude: 48.861904,
+      longitude: 2.369178,
+      zoom: 8,
+    },
+  },
+  {
+    name: "Cologne",
+    location: {
+      latitude: 50.925549,
+      longitude: 6.958874,
+      zoom: 8,
+    },
+  },
+  {
+    name: "Brussels",
+    location: {
+      latitude: 50.845206,
+      longitude: 4.344161,
+      zoom: 8,
+    },
+  },
+  {
+    name: "Amsterdam",
+    location: {
+      latitude: 52.365095,
+      longitude: 4.874937,
+      zoom: 8,
+    },
+  },
+  {
+    name: "Hamburg",
+    location: {
+      latitude: 53.550618,
+      longitude: 9.941211,
+      zoom: 8,
+    },
+  },
+  {
+    name: "Dusseldorf",
+    location: {
+      latitude: 51.21545,
+      longitude: 6.844219,
+      zoom: 8,
+    },
+  },
+];
+
+export { Settings, AppRoute, AuthorizationStatus, CITIES_LOCATION };

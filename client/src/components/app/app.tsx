@@ -8,28 +8,24 @@ import { NotFound } from "../../pages/not-found/not-found";
 import { offersList } from "../../mocks/offers-list";
 import { offers } from "../../mocks/offers";
 import { ReviewList } from "../../mocks/mock-reviews";
+import { PrivateRoute } from "../private-route/private-route";
 
-type AppMainPageProps = {
-  rentalOffersCount: number;
-};
-
-function App({ rentalOffersCount }: AppMainPageProps): React.JSX.Element {
+function App(): React.JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path={AppRoute.Main}
-          element={
-            <MainPage
-              rentalOffersCount={rentalOffersCount}
-              offersList={offersList}
-            />
-          }
-        />
+        <Route path={AppRoute.Main} element={<MainPage />} />
 
         <Route path={AppRoute.Login} element={<Login />} />
 
-        <Route path={AppRoute.Favorites} element={<Favorites />} />
+        <Route
+          path={AppRoute.Favorites}
+          element={
+            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+              <Favorites />
+            </PrivateRoute>
+          }
+        />
 
         <Route
           path={`${AppRoute.Offer}/:id`}
