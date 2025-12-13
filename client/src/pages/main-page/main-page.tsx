@@ -4,10 +4,15 @@ import Map from "../../components/map/map";
 import { useState, useMemo } from "react";
 import { useAppSelector } from "../../hooks";
 import { CitiesList } from "../../components/cities-list/cities-list";
-import { CITIES_LOCATION } from "../../const";
+import { CITIES_LOCATION, SortOffersType } from "../../const";
+import { SortOptions } from "../../components/sort-options/sort-options";
+import { SortOffer } from "../../types/sort";
+import { sortOffersByType } from "../../utils";
 
 function MainPage(): React.JSX.Element {
-  const [isSortingOpen, setIsSortingOpen] = useState(false);
+  const [activeSort, setActiveSort] = useState<SortOffer>(
+    SortOffersType.Popular
+  );
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
 
   const selectedCity = useAppSelector((state) => state.city);
@@ -19,11 +24,16 @@ function MainPage(): React.JSX.Element {
     return allOffers.filter((offer) => offer.city.name === safeCity.name);
   }, [allOffers, safeCity.name]);
 
-  const rentalOffersCount = cityOffers.length;
+  const sortedCityOffers = useMemo(
+    () => sortOffersByType(cityOffers, activeSort),
+    [cityOffers, activeSort]
+  );
+
+  const rentalOffersCount = sortedCityOffers.length;
 
   return (
     <div className="page page--gray page--main">
-      <Header offersList={cityOffers} />
+      <Header offersList={sortedCityOffers} />
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
@@ -39,46 +49,13 @@ function MainPage(): React.JSX.Element {
               <b className="places__found">
                 {rentalOffersCount} places to stay in {safeCity.name}
               </b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by </span>
-                <span
-                  className="places__sorting-type"
-                  tabIndex={0}
-                  onClick={() => setIsSortingOpen((v) => !v)}
-                  role="button"
-                  aria-expanded={isSortingOpen}
-                >
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use href="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                <ul
-                  className={`places__options places__options--custom ${
-                    isSortingOpen ? "places__options--opened" : ""
-                  }`}
-                  hidden={!isSortingOpen}
-                >
-                  <li
-                    className="places__option places__option--active"
-                    tabIndex={0}
-                  >
-                    Popular
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: low to high
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: high to low
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Top rated first
-                  </li>
-                </ul>
-              </form>
+              <SortOptions
+                activeSorting={activeSort}
+                onChange={(newSorting) => setActiveSort(newSorting)}
+              />
               <div className="cities__places-list places__list tabs__content">
                 <CitiesCardList
-                  offersList={cityOffers}
+                  offersList={sortedCityOffers}
                   onCardHover={setHoveredOfferId}
                 />
               </div>
@@ -87,7 +64,7 @@ function MainPage(): React.JSX.Element {
               <section className="cities__map map">
                 <Map
                   cityLocation={safeCity.location}
-                  offers={cityOffers}
+                  offers={sortedCityOffers}
                   hoveredOfferId={hoveredOfferId}
                 />
               </section>

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FullOffer, OffersList } from "../../types/offer";
 import { NotFound } from "../not-found/not-found";
 import { Header } from "../../components/header/header";
@@ -18,6 +18,12 @@ type OfferProps = {
 function Offer({ offers, offersList, reviewList }: OfferProps) {
   const params = useParams();
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
+  const [localReviews, setLocalReviews] = useState<Review[]>(reviewList);
+
+  useEffect(() => {
+    setLocalReviews(reviewList);
+  }, [reviewList]);
+
   const offer = offers.find((item) => item.id === params.id);
   if (!offer) {
     return <NotFound />;
@@ -127,8 +133,12 @@ function Offer({ offers, offersList, reviewList }: OfferProps) {
                 </div>
               </div>
               <section className="offer__reviews reviews">
-                <ReviewList reviews={reviewList} />
-                <ReviewForm />
+                <ReviewList reviews={localReviews} />
+                <ReviewForm
+                  onAddReview={(newReview: Review) =>
+                    setLocalReviews((prev) => [...prev, newReview])
+                  }
+                />
               </section>
             </div>
           </div>

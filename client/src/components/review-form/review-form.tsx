@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { Review } from "../../types/review";
 
-function ReviewForm(): React.JSX.Element {
+type ReviewFormProps = {
+  onAddReview?: (review: Review) => void;
+};
+
+function ReviewForm({ onAddReview }: ReviewFormProps): React.JSX.Element {
   const [formData, setFormData] = useState({
     rating: 0,
     review: "",
@@ -12,7 +17,23 @@ function ReviewForm(): React.JSX.Element {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFormData({ rating: 0, review: "" });
+    const text = formData.review.trim();
+    if (formData.rating > 0 && text.length >= 50) {
+      const newReview: Review = {
+        id: String(Date.now()),
+        date: new Date().toISOString(),
+        user: {
+          name: "Guest",
+          avatarUrl: "/img/avatar-default.png",
+          isPro: false,
+        },
+        comment: text,
+        rating: formData.rating,
+      };
+
+      onAddReview?.(newReview);
+      setFormData({ rating: 0, review: "" });
+    }
   };
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
