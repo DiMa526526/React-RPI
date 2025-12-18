@@ -34,13 +34,10 @@ export function sortOffersByType(
 }
 
 export function formatReviewDate(dateStr: string): string {
-  // Try parsing the date string to a Date; if it fails, return the original string
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) {
-    // try parse month-year like 'March 2024' -> Date should handle it, but if not, return original
     return dateStr;
   }
-  // Format month and year in English: e.g., 'March 2024'
   return new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
