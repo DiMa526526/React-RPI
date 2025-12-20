@@ -15,7 +15,7 @@ type OfferProps = {
   reviewList: Review[];
 };
 
-function Offer({ offers, offersList, reviewList }: OfferProps) {
+function Offer({ offers, offersList, reviewList}: OfferProps) {
   const params = useParams();
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
   const [localReviews, setLocalReviews] = useState<Review[]>(reviewList);
@@ -65,8 +65,8 @@ function Offer({ offers, offersList, reviewList }: OfferProps) {
                   }`}
                   type="button"
                 >
-                  <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use href="#icon-bookmark"></use>
+                  <svg className="place-card__bookmark-icon" width="18" height="19">
+                    <use href="/img/sprite.svg#icon-bookmark" style={offer.isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
                   </svg>
                   <span className="visually-hidden">To bookmarks</span>
                 </button>

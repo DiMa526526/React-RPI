@@ -37,7 +37,7 @@ function FavoriteCard({
           <img
             className="place-card__image"
             src={previewImage}
-            width="260"
+            width="150"
             height="200"
             alt="Place image"
           />
