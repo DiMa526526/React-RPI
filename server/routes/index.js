@@ -7,6 +7,6 @@ const router = new Router();
 
 router.use('/', offerRouter);
 router.use('/', userRoutes);
-router.use('/', reviewRoutes);
+router.use('/comments', reviewRoutes);
 
 export { router };

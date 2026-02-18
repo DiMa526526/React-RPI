@@ -1,22 +1,10 @@
 import { Router } from 'express';
-import { 
-    getReviewsByOfferId, 
-    createReview,
-    getReviewById,
-    updateReview,
-    deleteReview 
-} from '../controllers/reviewController.js';
+import { addReview, getReviewByOfferId} from '../controllers/reviewController.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 
 const router = new Router();
 
-router.get('/offers/:offerId/reviews', getReviewsByOfferId);
-
-router.post('/offers/:offerId/reviews', createReview);
-
-router.get('/reviews/:id', getReviewById);
-
-router.put('/reviews/:id', updateReview);
-
-router.delete('/reviews/:id', deleteReview);
+router.post('/:offerId', authenticateToken, addReview);
+router.get('/:offerId', getReviewByOfferId);
 
 export default router;
