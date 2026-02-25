@@ -9,8 +9,16 @@ import { offersList } from "../../mocks/offers-list";
 import { offers } from "../../mocks/offers";
 import { ReviewList } from "../../mocks/mock-reviews";
 import { PrivateRoute } from "../private-route/private-route";
+import { useAppSelector } from "../../hooks";
+import { LoadingPage } from "../../pages/loading-page/LoadingPage"
 
 function App(): React.JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+const isOffersDataLoading = useAppSelector((state) => state.isOffersDataLoading);
+
+if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoading) {
+    return <LoadingPage />;
+}
   return (
     <BrowserRouter>
       <Routes>
@@ -21,7 +29,7 @@ function App(): React.JSX.Element {
         <Route
           path={AppRoute.Favorites}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+            <PrivateRoute authorizationStatus={authorizationStatus}>
               <Favorites />
             </PrivateRoute>
           }
