@@ -60,7 +60,7 @@ export function CitiesCard({
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              width: '150px',
+              width: '260px',
               height: '200px',
             }}
           />
