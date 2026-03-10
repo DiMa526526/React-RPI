@@ -6,6 +6,7 @@ type CitiesCardListProps = {
   wrapperClassName?: string;
   cardClassName?: string;
   onCardHover?: (id: string | null) => void;
+  onToggleFavorite?: (id: string) => void;
 };
 
 export function CitiesCardList({
@@ -13,6 +14,7 @@ export function CitiesCardList({
   wrapperClassName = "cities__places-list places__list tabs__content",
   cardClassName = "cities__card",
   onCardHover,
+  onToggleFavorite,
 }: CitiesCardListProps) {
   return (
     <div className={wrapperClassName}>
@@ -22,6 +24,7 @@ export function CitiesCardList({
           {...item}
           cardClassName={cardClassName}
           onCardHover={onCardHover}
+          onToggleFavorite={onToggleFavorite}
         />
       ))}
     </div>

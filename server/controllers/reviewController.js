@@ -21,7 +21,14 @@ export const addReview = async (req, res, next) => {
             OfferId: offerId
         });
 
-        res.status(201).json(review);
+        // Получить созданный review с автором
+        const createdReview = await Review.findByPk(review.id, {
+            include: { model: User, as: 'author' }
+        });
+
+        const adaptedReview = adaptReviewToClient(createdReview);
+
+        res.status(201).json(adaptedReview);
     } catch (error) {
         console.error(error);
         next(ApiError.badRequest('Ошибка при добавлении комментария'));

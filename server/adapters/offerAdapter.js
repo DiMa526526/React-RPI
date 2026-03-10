@@ -50,7 +50,7 @@ export const adaptFullOfferToClient = (offer, author) => {
 
   let previewImage = getFullImageUrl(offer.previewImage);
   
-  const photos = offer.photos?.map(photo => getFullImageUrl(photo)) || [];
+  const images = offer.photos?.map(photo => getFullImageUrl(photo)) || [];
 
   return {
     id: String(offer.id),
@@ -70,7 +70,7 @@ export const adaptFullOfferToClient = (offer, author) => {
     isPremium: offer.isPremium,
     rating: parseFloat(offer.rating),
     previewImage,
-    photos,
+    images,
     bedrooms: offer.rooms,
     maxAdults: offer.guests,
     goods: offer.features || [],

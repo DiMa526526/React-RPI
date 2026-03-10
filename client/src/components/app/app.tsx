@@ -37,13 +37,7 @@ if (authorizationStatus === AuthorizationStatus.Unknown || isOffersDataLoading) 
 
         <Route
           path={`${AppRoute.Offer}/:id`}
-          element={
-            <Offer
-              offers={offers}
-              offersList={offersList}
-              reviewList={ReviewList}
-            />
-          }
+          element={<Offer />}
         />
 
         <Route path="*" element={<NotFound />} />

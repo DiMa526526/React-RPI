@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BACKEND_URL } from '../../const';
 import { Link } from "react-router-dom";
 
 type FavoriteCardProps = {
@@ -36,9 +37,9 @@ function FavoriteCard({
         <Link to={"${AppRoute.Offer/${id}"}>
           <img
             className="place-card__image"
-            src={previewImage}
-            width="260"
-            height="200"
+            src={previewImage && previewImage.startsWith('/static') ? `${BACKEND_URL}${previewImage}` : previewImage}
+            width="150"
+            height="110"
             alt="Place image"
           />
         </Link>

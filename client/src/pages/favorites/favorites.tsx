@@ -1,9 +1,16 @@
-import { offersList } from "../../mocks/offers-list";
 import { Header } from "../../components/header/header";
 import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { selectFavoriteOffers } from '../../store/selectors';
+import { toggleFavoriteAction } from '../../store/api-action';
 
 function Favorites() {
-  const favoriteOffers = offersList.filter((offer) => offer.isFavorite);
+  const dispatch = useAppDispatch();
+  const favoriteOffers = useAppSelector(selectFavoriteOffers);
+
+  const handleToggleFavorite = (id: string) => {
+    dispatch(toggleFavoriteAction(id));
+  };
 
   const offersByCity = favoriteOffers.reduce((acc, offer) => {
     const cityName = offer.city.name;
@@ -18,8 +25,8 @@ function Favorites() {
 
   if (favoriteOffers.length === 0) {
     return (
-      <div className="page">
-        <Header offersList={offersList} />
+      <div className="page page--gray page--main">
+        <Header />
         <main className="page__main page__main--favorites">
           <div className="page__favorites-container container">
             <section className="favorites">
@@ -49,8 +56,8 @@ function Favorites() {
   }
 
   return (
-    <div className="page">
-      <Header offersList={offersList} />
+    <div className="page page--gray page--main">
+      <Header />
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">
@@ -71,6 +78,7 @@ function Favorites() {
                       wrapperClassName="favorites__places"
                       cardClassName="favorites__card"
                       onCardHover={() => {}}
+                      onToggleFavorite={handleToggleFavorite}
                     />
                   </div>
                 </li>

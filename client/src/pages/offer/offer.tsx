@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FullOffer, OffersList } from "../../types/offer";
 import { NotFound } from "../not-found/not-found";
 import { Header } from "../../components/header/header";
 import { ReviewForm } from "../../components/review-form/review-form";
@@ -8,25 +7,56 @@ import { ReviewList } from "../../components/reviews-list/reviews-list";
 import { Review } from "../../types/review";
 import Map from "../../components/map/map";
 import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { fetchOfferAction, fetchCommentsAction, addReviewAction, toggleFavoriteAction } from "../../store/api-action";
+import { selectOffer, selectComments, selectIsOfferLoading, selectIsOfferNotFound } from "../../store/selectors";
+import { getAuthorizationStatus } from "../../store/selectors";
+import { AuthorizationStatus } from "../../const";
 
-type OfferProps = {
-  offers: FullOffer[];
-  offersList: OffersList[];
-  reviewList: Review[];
-};
-
-function Offer({ offers, offersList, reviewList}: OfferProps) {
+function Offer() {
   const params = useParams();
+  const dispatch = useAppDispatch();
+  const offer = useAppSelector(selectOffer);
+  const comments = useAppSelector(selectComments);
+  const offersList = useAppSelector((state) => state.offers);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const isOfferNotFound = useAppSelector(selectIsOfferNotFound);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
-  const [localReviews, setLocalReviews] = useState<Review[]>(reviewList);
+  const [localReviews, setLocalReviews] = useState<Review[]>(comments);
+
+  const handleToggleFavorite = () => {
+    if (offer) {
+      dispatch(toggleFavoriteAction(offer.id));
+    }
+  };
 
   useEffect(() => {
-    setLocalReviews(reviewList);
-  }, [reviewList]);
+    if (params.id) {
+      dispatch(fetchOfferAction(params.id));
+      dispatch(fetchCommentsAction(params.id));
+    }
+  }, [params.id, dispatch]);
 
-  const offer = offers.find((item) => item.id === params.id);
-  if (!offer) {
+  useEffect(() => {
+    setLocalReviews(comments);
+  }, [comments]);
+
+  if (isOfferNotFound) {
     return <NotFound />;
+  }
+
+  if (isOfferLoading || !offer) {
+    return (
+      <div className="page page--gray page--main">
+        <Header />
+        <main className="page__main page__main--offer">
+          <div className="offer__container container">
+            <div>Loading...</div>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   const nearOffers = offersList
@@ -36,8 +66,8 @@ function Offer({ offers, offersList, reviewList}: OfferProps) {
     .slice(0, 3);
 
   return (
-    <div className="page">
-      <Header offersList={offersList} />
+    <div className="page page--gray page--main">
+      <Header />
 
       <main className="page__main page__main--offer">
         <section className="offer">
@@ -64,6 +94,7 @@ function Offer({ offers, offersList, reviewList}: OfferProps) {
                     offer.isFavorite ? "offer__bookmark-button--active" : ""
                   }`}
                   type="button"
+                  onClick={handleToggleFavorite}
                 >
                   <svg className="place-card__bookmark-icon" width="18" height="19">
                     <use href="/img/sprite.svg#icon-bookmark" style={offer.isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
@@ -134,11 +165,7 @@ function Offer({ offers, offersList, reviewList}: OfferProps) {
               </div>
               <section className="offer__reviews reviews">
                 <ReviewList reviews={localReviews} />
-                <ReviewForm
-                  onAddReview={(newReview: Review) =>
-                    setLocalReviews((prev) => [...prev, newReview])
-                  }
-                />
+                {authorizationStatus === AuthorizationStatus.Auth && <ReviewForm offerId={params.id!} />}
               </section>
             </div>
           </div>

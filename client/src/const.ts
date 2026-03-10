@@ -2,9 +2,13 @@ import { CityOffer } from "./types/offer";
 
 const APIRoute = {
   Offers: '/offers',
+  Offer: '/offers',
+  Comments: '/reviews',
   Login: '/login',
   Logout: '/logout',
 };
+
+const BACKEND_URL = 'http://localhost:5000';
 
 const Settings = {
   rentOffersCount: 312,
@@ -90,5 +94,6 @@ export {
   CITIES_LOCATION,
   SortOffersType,
   APIRoute,
+  BACKEND_URL,
   TIMEOUT_SHOW_ERROR,
 };

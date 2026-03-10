@@ -2,18 +2,20 @@ import { CitiesCardList } from "../../components/cities-card-list/cities-card-li
 import { Header } from "../../components/header/header";
 import Map from "../../components/map/map";
 import { useState, useMemo } from "react";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector, useAppDispatch } from "../../hooks";
 import { CitiesList } from "../../components/cities-list/cities-list";
 import { CITIES_LOCATION, SortOffersType } from "../../const";
 import { SortOptions } from "../../components/sort-options/sort-options";
 import { SortOffer } from "../../types/sort";
 import { sortOffersByType } from "../../utils";
+import { toggleFavoriteAction } from "../../store/api-action";
 
 function MainPage(): React.JSX.Element {
   const [activeSort, setActiveSort] = useState<SortOffer>(
     SortOffersType.Popular
   );
   const [hoveredOfferId, setHoveredOfferId] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
   const selectedCity = useAppSelector((state) => state.city);
   const safeCity =
@@ -31,9 +33,13 @@ function MainPage(): React.JSX.Element {
 
   const rentalOffersCount = sortedCityOffers.length;
 
+  const handleToggleFavorite = (id: string) => {
+    dispatch(toggleFavoriteAction(id));
+  };
+
   return (
     <div className="page page--gray page--main">
-      <Header offersList={allOffers} />
+      <Header />
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
@@ -57,6 +63,7 @@ function MainPage(): React.JSX.Element {
                 <CitiesCardList
                   offersList={sortedCityOffers}
                   onCardHover={setHoveredOfferId}
+                  onToggleFavorite={handleToggleFavorite}
                 />
               </div>
             </section>

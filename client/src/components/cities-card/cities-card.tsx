@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
+import { BACKEND_URL } from '../../const';
 import { OffersList } from "../../types/offer";
 
 type CitiesCardProps = OffersList & {
   cardClassName?: string;
   onCardHover?: (id: string | null) => void;
   isFavorite?: boolean; 
+  onToggleFavorite?: (id: string) => void;
 };
 
 export function CitiesCard({
@@ -18,6 +20,7 @@ export function CitiesCard({
   rating,
   cardClassName = "cities__card",
   onCardHover,
+  onToggleFavorite,
 }: CitiesCardProps) {
   const displayType =
     type === "apartment"
@@ -31,12 +34,20 @@ export function CitiesCard({
     "__image-wrapper"
   );
 
+  const isFavoritesCard = cardClassName === 'favorites__card';
+  const imageWidth = isFavoritesCard ? '150px' : '260px';
+  const imageHeight = isFavoritesCard ? '110px' : '200px';
+
   const handleMouseEnter = () => {
     onCardHover?.(id);
   };
 
   const handleMouseLeave = () => {
     onCardHover?.(null);
+  };
+
+  const handleToggleFavorite = () => {
+    onToggleFavorite?.(id);
   };
 
 
@@ -56,12 +67,12 @@ export function CitiesCard({
           <div 
             className="place-card__image"
             style={{
-              backgroundImage: `url(${previewImage})`,
+              backgroundImage: `url(${previewImage && previewImage.startsWith('/static') ? `${BACKEND_URL}${previewImage}` : previewImage})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              width: '260px',
-              height: '200px',
+              width: imageWidth,
+              height: imageHeight,
             }}
           />
         </Link>
@@ -72,9 +83,18 @@ export function CitiesCard({
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <svg className="place-card__bookmark-icon" width="18" height="19">
-            <use href="/img/sprite.svg#icon-bookmark" style={isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
-          </svg>
+          <button
+            className={`place-card__bookmark-button button ${
+              isFavorite ? "place-card__bookmark-button--active" : ""
+            }`}
+            type="button"
+            onClick={handleToggleFavorite}
+          >
+            <svg className="place-card__bookmark-icon" width="18" height="19">
+              <use href="/img/sprite.svg#icon-bookmark" style={isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
+            </svg>
+            <span className="visually-hidden">To bookmarks</span>
+          </button>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">

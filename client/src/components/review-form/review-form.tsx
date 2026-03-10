@@ -1,38 +1,46 @@
 import { useState } from "react";
 import { Review } from "../../types/review";
+import { useAppDispatch } from "../../hooks";
+import { addReviewAction } from "../../store/api-action";
 
 type ReviewFormProps = {
-  onAddReview?: (review: Review) => void;
+  offerId: string;
 };
 
-function ReviewForm({ onAddReview }: ReviewFormProps): React.JSX.Element {
+function ReviewForm({ offerId }: ReviewFormProps): React.JSX.Element {
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     rating: 0,
     review: "",
   });
+  const [errors, setErrors] = useState<{ rating?: string; review?: string }>({});
 
   const handleRatingChange = (rating: number) => {
     setFormData({ ...formData, rating });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const text = formData.review.trim();
-    if (formData.rating > 0 && text.length >= 50) {
-      const newReview: Review = {
-        id: String(Date.now()),
-        date: new Date().toISOString(),
-        user: {
-          name: "Guest",
-          avatarUrl: "/img/avatar-default.png",
-          isPro: false,
-        },
-        comment: text,
-        rating: formData.rating,
-      };
+    const newErrors: { rating?: string; review?: string } = {};
 
-      onAddReview?.(newReview);
-      setFormData({ rating: 0, review: "" });
+    if (formData.rating === 0) {
+      newErrors.rating = "Please set a rating.";
+    }
+    if (text.length < 50) {
+      newErrors.review = "Describe your stay with at least 50 characters.";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        await dispatch(addReviewAction({ offerId, review: text, rating: formData.rating }));
+        setFormData({ rating: 0, review: "" });
+        setErrors({});
+      } catch (error) {
+        console.error('Failed to add review:', error);
+      }
     }
   };
 
@@ -87,6 +95,7 @@ function ReviewForm({ onAddReview }: ReviewFormProps): React.JSX.Element {
           );
         })}
       </div>
+      {errors.rating && <p style={{ color: 'red' }}>{errors.rating}</p>}
       <textarea
         value={formData.review}
         onChange={handleTextareaChange}
@@ -95,6 +104,7 @@ function ReviewForm({ onAddReview }: ReviewFormProps): React.JSX.Element {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
       />
+      {errors.review && <p style={{ color: 'red' }}>{errors.review}</p>}
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set{" "}

@@ -1,13 +1,46 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo } from "../logo/logo";
-import { OffersList } from "../../types/offer";
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { logoutAction, checkAuthAction } from '../../store/api-action';
+import { selectFavoriteOffers } from '../../store/selectors';
+import { useEffect } from 'react';
 
-type HeaderProps = {
-  offersList: OffersList[];
-};
+function Header() {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const userData = useAppSelector((state) => state.userData);
+  const favoriteOffers = useAppSelector(selectFavoriteOffers);
+  const dispatch = useAppDispatch();
 
-function Header({ offersList }: HeaderProps) {
-  const favoriteOffers = offersList.filter((offer) => offer.isFavorite);
+  useEffect(() => {
+    if (authorizationStatus === 'UNKNOWN') {
+      dispatch(checkAuthAction());
+    }
+    if (authorizationStatus === 'AUTH' && !userData) {
+      dispatch(checkAuthAction()); // Ensure user data is fetched after login
+    }
+  }, [authorizationStatus, userData, dispatch]);
+
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    dispatch(logoutAction());
+    navigate('/');
+  };
+
+  if (authorizationStatus === 'UNKNOWN' || (authorizationStatus === 'AUTH' && !userData)) {
+    return (
+      <header className="header">
+        <div className="container">
+          <div className="header__wrapper">
+            <div className="header__left">
+              <Logo />
+            </div>
+            <div className="header__spinner">Loading...</div>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="header">
@@ -18,28 +51,38 @@ function Header({ offersList }: HeaderProps) {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              <li className="header__nav-item user">
-                <Link
-                  className="header__nav-link header__nav-link--profile"
-                  to="/favorites"
-                >
-                  <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                  <span className="header__user-name user__name">
-                    Myemail@gmail.com
-                  </span>
-                  <span className="header__favorite-count">
-                    {favoriteOffers.length}
-                  </span>
-                </Link>
-              </li>
-              <li className="header__nav-item">
-                <Link
-                  className="header__nav-link"
-                  to="/login"
-                >
-                  <span className="header__signout">Sign out</span>
-                </Link>
-              </li>
+              {authorizationStatus === "AUTH" && userData ? (
+                <>
+                  <li className="header__nav-item user">
+                    <Link
+                      to="/favorites"
+                      className="header__nav-link header__nav-link--profile"
+                    >
+                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <span className="header__user-name user__name">
+                        {userData.email}
+                      </span>
+                      <span className="header__favorite-count">
+                        {favoriteOffers.length}
+                      </span>
+                    </Link>
+                  </li>
+                  <li className="header__nav-item">
+                    <button
+                      className="header__nav-link header__signout button"
+                      onClick={handleSignOut}
+                    >
+                      Sign out
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li className="header__nav-item">
+                  <Link to="/login" className="header__nav-link">
+                    Sign in
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

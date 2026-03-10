@@ -12,26 +12,26 @@ function Login() {
  const passwordRef = useRef<HTMLInputElement | null>(null);
 
  const dispatch = useAppDispatch();
-
  const userAuthorizationStatus = useAppSelector(getAuthorizationStatus);
- if (userAuthorizationStatus === AuthorizationStatus.Auth) {
-   return <Navigate to={ AppRoute.Main }/>;
- }
 
- const onSubmit = (authData: AuthData) => {
-   dispatch(loginAction(authData));
+ const onSubmit = async (authData: AuthData) => {
+   await dispatch(loginAction(authData));
  };
 
- const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+ const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
    evt.preventDefault();
 
    if (loginRef.current && passwordRef.current) {
-     onSubmit({
+     await onSubmit({
        email: loginRef.current.value,
        password: passwordRef.current.value,
      });
    }
  };
+
+ if (userAuthorizationStatus === AuthorizationStatus.Auth) {
+   return <Navigate to={ AppRoute.Main }/>;
+ }
 
  return(
    <div className="page page--gray page--login">
