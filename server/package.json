@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon index.js"
+   "scripts": {
+    "dev": "nodemon index.js",
+    "swagger:gen-examples": "node scripts/gen-swagger-examples.js"
   },
   "keywords": [],
   "author": "",
@@ -26,3 +27,5 @@
     "nodemon": "^3.1.11"
   }
 }
+
+

@@ -14,12 +14,14 @@ type MapProps = {
   cityLocation: OfferLocation;
   offers: OffersList[];
   hoveredOfferId?: string | null;
+  activeOfferId?: string;
 };
 
 function Map({
   cityLocation,
   offers,
   hoveredOfferId,
+  activeOfferId,
 }: MapProps): React.JSX.Element {
   const mapRef = useRef<HTMLDivElement>(null);
   const map = useMap(mapRef, cityLocation);
@@ -64,13 +66,14 @@ function Map({
     markersRef.current = [];
 
     offers.forEach((offer) => {
+      const isActive = offer.id === activeOfferId;
       const marker = leaflet.marker(
         {
           lat: offer.location.latitude,
           lng: offer.location.longitude,
         },
         {
-          icon: defaultCustomIcon,
+          icon: isActive ? hoverCustomIcon : defaultCustomIcon,
         }
       );
 
@@ -81,23 +84,30 @@ function Map({
           marker.setIcon(hoverCustomIcon);
         })
         .on("mouseout", () => {
-          marker.setIcon(defaultCustomIcon);
+          if (isActive) {
+            marker.setIcon(hoverCustomIcon);
+          } else {
+            marker.setIcon(defaultCustomIcon);
+          }
         });
 
       marker.addTo(map);
       markersRef.current.push(marker);
     });
-  }, [map, offers, defaultCustomIcon, hoverCustomIcon]);
+  }, [map, offers, activeOfferId, defaultCustomIcon, hoverCustomIcon]);
 
   useEffect(() => {
     markersRef.current.forEach((marker) => {
-      if (marker.offerId === hoveredOfferId) {
+      const isActive = marker.offerId === activeOfferId;
+      const isHovered = marker.offerId === hoveredOfferId;
+      
+      if (isActive || isHovered) {
         marker.setIcon(hoverCustomIcon);
       } else {
         marker.setIcon(defaultCustomIcon);
       }
     });
-  }, [hoveredOfferId, defaultCustomIcon, hoverCustomIcon]);
+  }, [hoveredOfferId, activeOfferId, defaultCustomIcon, hoverCustomIcon]);
 
   return (
     <div

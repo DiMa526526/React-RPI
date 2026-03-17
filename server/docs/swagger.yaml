@@ -1,0 +1,284 @@
+openapi: 3.0.0
+info:
+  title: Housing Rental API
+  version: 1.0.0
+  description: API для работы с предложениями, отзывами и пользователями
+servers:
+  - url: http://localhost:5000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+tags:
+  - name: Users
+  - name: Offers
+  - name: Reviews
+paths:
+  /register:
+    post:
+      summary: Регистрация пользователя
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                avatar:
+                  type: string
+                  format: binary
+                  description: Аватар пользователя (опционально)
+      responses:
+        "201":
+          description: Пользователь успешно зарегистрирован
+        "400":
+          description: Ошибка валидации данных
+  /login:
+    post:
+      summary: Авторизация пользователя
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+            example:
+              email: Dovie43@gmail.com
+              password: 6oNqOzYl7f
+      responses:
+        "200":
+          description: Успешный логин, возвращает токен
+        "400":
+          description: Неверные email или пароль
+    get:
+      summary: Проверка авторизации
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Пользователь авторизован
+        "401":
+          description: Не авторизован
+  /logout:
+    delete:
+      summary: Выход пользователя
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Успешно вышли
+        "401":
+          description: Не авторизован
+  /offers:
+    get:
+      summary: Получить все предложения
+      tags:
+        - Offers
+      responses:
+        "200":
+          description: Список всех предложений
+    post:
+      summary: Создание нового предложения
+      description: >
+        Создает новое предложение (offer). Принимает данные в формате
+        multipart/form-data. Поле previewImage обязательно. Поле photos — массив
+        из 6 файлов.
+      tags:
+        - Offers
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - city
+                - price
+                - rooms
+                - guests
+                - previewImage
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                publishDate:
+                  type: string
+                  format: date
+                city:
+                  type: string
+                isPremium:
+                  type: boolean
+                isFavorite:
+                  type: boolean
+                rating:
+                  type: number
+                type:
+                  type: string
+                  enum:
+                    - apartment
+                    - house
+                    - room
+                    - hotel
+                rooms:
+                  type: integer
+                guests:
+                  type: integer
+                price:
+                  type: number
+                features:
+                  type: string
+                  description: JSON-строка массива из значений 'Breakfast', 'Air conditioning',
+                    'Laptop friendly workspace', 'Baby seat', 'Washer',
+                    'Towels', 'Fridge'
+                commentsCount:
+                  type: integer
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                previewImage:
+                  type: string
+                  format: binary
+                  description: Основное изображение (обязательно)
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Дополнительные изображения
+      responses:
+        "201":
+          description: Предложение успешно создано
+        "400":
+          description: Ошибка валидации данных
+        "401":
+          description: Не авторизован
+  /offers/{id}:
+    get:
+      summary: Получить полное предложение по ID
+      tags:
+        - Offers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Полная информация о предложении
+        "404":
+          description: Предложение не найдено
+  /offers/favorite/{offerId}/{status}:
+    post:
+      summary: Переключить избранное
+      tags:
+        - Offers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      responses:
+        "200":
+          description: Статус избранного успешно обновлен
+        "401":
+          description: Не авторизован
+        "404":
+          description: Предложение не найдено
+  /reviews/{offerId}:
+    get:
+      summary: Получить все отзывы для предложения
+      tags:
+        - Reviews
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Список отзывов
+        "404":
+          description: Предложение не найдено
+    post:
+      summary: Добавить новый отзыв
+      tags:
+        - Reviews
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - comment
+                - rating
+              properties:
+                comment:
+                  type: string
+                rating:
+                  type: number
+                  minimum: 1
+                  maximum: 5
+      responses:
+        "201":
+          description: Отзыв успешно создан
+        "400":
+          description: Ошибка валидации данных
+        "401":
+          description: Не авторизован
+        "404":
+          description: Предложение не найдено

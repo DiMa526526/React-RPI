@@ -76,9 +76,9 @@ export const adaptFullOfferToClient = (offer, author) => {
     goods: offer.features || [],
     host: {
       id: String(author.id),
-      name: author.name,
+      name: author.username,
       avatarUrl: getFullImageUrl(author.avatar),
-      isPro: author.isPro || false,
+      isPro: author.userType === 'pro',
       email: author.email
     },
     commentsCount: offer.commentsCount || 0,

@@ -41,7 +41,7 @@ function MainPage(): React.JSX.Element {
     <div className="page page--gray page--main">
       <Header />
 
-      <main className="page__main page__main--index">
+      <main className={`page__main page__main--index ${rentalOffersCount === 0 ? 'page__main--index-empty' : ''}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
@@ -49,33 +49,47 @@ function MainPage(): React.JSX.Element {
           </section>
         </div>
         <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">
-                {rentalOffersCount} places to stay in {safeCity.name}
-              </b>
-              <SortOptions
-                activeSorting={activeSort}
-                onChange={(newSorting) => setActiveSort(newSorting)}
-              />
-              <div className="cities__places-list places__list tabs__content">
-                <CitiesCardList
-                  offersList={sortedCityOffers}
-                  onCardHover={setHoveredOfferId}
-                  onToggleFavorite={handleToggleFavorite}
-                />
-              </div>
-            </section>
-            <div className="cities__right-section">
-              <section className="cities__map map">
-                <Map
-                  cityLocation={safeCity.location}
-                  offers={sortedCityOffers}
-                  hoveredOfferId={hoveredOfferId}
-                />
-              </section>
-            </div>
+          <div className={`cities__places-container container ${rentalOffersCount === 0 ? 'cities__places-container--empty' : ''}`}>
+            {rentalOffersCount > 0 ? (
+              <>
+                <section className="cities__places places">
+                  <h2 className="visually-hidden">Places</h2>
+                  <b className="places__found">
+                    {rentalOffersCount} places to stay in {safeCity.name}
+                  </b>
+                  <SortOptions
+                    activeSorting={activeSort}
+                    onChange={(newSorting) => setActiveSort(newSorting)}
+                  />
+                  <div className="cities__places-list places__list tabs__content">
+                    <CitiesCardList
+                      offersList={sortedCityOffers}
+                      onCardHover={setHoveredOfferId}
+                      onToggleFavorite={handleToggleFavorite}
+                    />
+                  </div>
+                </section>
+                <div className="cities__right-section">
+                  <section className="cities__map map">
+                    <Map
+                      cityLocation={safeCity.location}
+                      offers={sortedCityOffers}
+                      hoveredOfferId={hoveredOfferId}
+                    />
+                  </section>
+                </div>
+              </>
+            ) : (
+              <>
+                <section className="cities__no-places">
+                  <div className="cities__status-wrapper tabs__content">
+                    <b className="cities__status">No places to stay available</b>
+                    <p className="cities__status-description">We could not find any property available at the moment in {safeCity.name}</p>
+                  </div>
+                </section>
+                <div className="cities__right-section" />
+              </>
+            )}
           </div>
         </div>
       </main>

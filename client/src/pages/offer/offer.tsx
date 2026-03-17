@@ -8,7 +8,7 @@ import { Review } from "../../types/review";
 import Map from "../../components/map/map";
 import { CitiesCardList } from "../../components/cities-card-list/cities-card-list";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { fetchOfferAction, fetchCommentsAction, addReviewAction, toggleFavoriteAction } from "../../store/api-action";
+import { fetchOfferAction, fetchCommentsAction, toggleFavoriteAction } from "../../store/api-action";
 import { selectOffer, selectComments, selectIsOfferLoading, selectIsOfferNotFound } from "../../store/selectors";
 import { getAuthorizationStatus } from "../../store/selectors";
 import { AuthorizationStatus } from "../../const";
@@ -65,6 +65,22 @@ function Offer() {
     )
     .slice(0, 3);
 
+  const mapOffers = [
+    {
+      id: offer.id,
+      title: offer.title,
+      type: offer.type,
+      price: offer.price,
+      city: offer.city,
+      location: offer.location,
+      isFavorite: offer.isFavorite,
+      isPremium: offer.isPremium,
+      rating: offer.rating,
+      previewImage: offer.images[0],
+    },
+    ...nearOffers,
+  ];
+
   return (
     <div className="page page--gray page--main">
       <Header />
@@ -89,18 +105,20 @@ function Offer() {
               ) : null}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{offer.title}</h1>
-                <button
-                  className={`offer__bookmark-button button ${
-                    offer.isFavorite ? "offer__bookmark-button--active" : ""
-                  }`}
-                  type="button"
-                  onClick={handleToggleFavorite}
-                >
-                  <svg className="place-card__bookmark-icon" width="18" height="19">
-                    <use href="/img/sprite.svg#icon-bookmark" style={offer.isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                {authorizationStatus === AuthorizationStatus.Auth && (
+                  <button
+                    className={`offer__bookmark-button button ${
+                      offer.isFavorite ? "offer__bookmark-button--active" : ""
+                    }`}
+                    type="button"
+                    onClick={handleToggleFavorite}
+                  >
+                    <svg className="place-card__bookmark-icon" width="18" height="19">
+                      <use href="/img/sprite.svg#icon-bookmark" style={offer.isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
+                    </svg>
+                    <span className="visually-hidden">To bookmarks</span>
+                  </button>
+                )}
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
@@ -172,8 +190,9 @@ function Offer() {
           <section className="offer__map map">
             <Map
               cityLocation={offer.location}
-              offers={nearOffers}
+              offers={mapOffers}
               hoveredOfferId={hoveredOfferId}
+              activeOfferId={offer.id}
             />
           </section>
         </section>

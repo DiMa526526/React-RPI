@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import { BACKEND_URL } from '../../const';
+import { BACKEND_URL, AuthorizationStatus } from '../../const';
 import { OffersList } from "../../types/offer";
+import { useAppSelector } from "../../hooks";
+import { getAuthorizationStatus } from "../../store/selectors";
 
 type CitiesCardProps = OffersList & {
   cardClassName?: string;
@@ -22,6 +24,7 @@ export function CitiesCard({
   onCardHover,
   onToggleFavorite,
 }: CitiesCardProps) {
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const displayType =
     type === "apartment"
       ? "Apartment"
@@ -83,18 +86,20 @@ export function CitiesCard({
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button
-            className={`place-card__bookmark-button button ${
-              isFavorite ? "place-card__bookmark-button--active" : ""
-            }`}
-            type="button"
-            onClick={handleToggleFavorite}
-          >
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use href="/img/sprite.svg#icon-bookmark" style={isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          {authorizationStatus === AuthorizationStatus.Auth && (
+            <button
+              className={`place-card__bookmark-button button ${
+                isFavorite ? "place-card__bookmark-button--active" : ""
+              }`}
+              type="button"
+              onClick={handleToggleFavorite}
+            >
+              <svg className="place-card__bookmark-icon" width="18" height="19">
+                <use href="/img/sprite.svg#icon-bookmark" style={isFavorite ? {stroke: '#4481c3', fill: '#4481c3'} : {}}></use>
+              </svg>
+              <span className="visually-hidden">To bookmarks</span>
+            </button>
+          )}
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
