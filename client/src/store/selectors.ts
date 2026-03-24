@@ -10,9 +10,9 @@ export const selectFavoriteOffers = createSelector(
 export const getAuthorizationStatus = (state: State): AuthorizationStatusType =>
  state.authorizationStatus;
 
-export const selectOffer = (state: State) => state.offer;
+export const selectOffer = (state: State) => state.currentOffer;
 
-export const selectComments = (state: State) => state.comments;
+export const selectComments = (state: State) => state.offerReviews;
 
 export const selectIsOfferLoading = (state: State) => state.isOfferLoading;
 

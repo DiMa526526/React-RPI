@@ -16,9 +16,9 @@ export type InitialState = {
     authorizationStatus: AuthorizationStatusType;
     error: string | null;
     isOffersDataLoading: boolean;
-    userData: UserData | null; // Added userData field
-    offer: FullOffer | null;
-    comments: Review[];
+    user: UserData | null;
+    currentOffer: FullOffer | null;
+    offerReviews: Review[];
     isOfferLoading: boolean;
     isOfferNotFound: boolean;
 }
@@ -29,9 +29,9 @@ const initialState: InitialState = {
     authorizationStatus: AuthorizationStatus.Unknown,
     error: null,
     isOffersDataLoading: false,
-    userData: null, // Initialize userData as null
-    offer: null,
-    comments: [],
+    user: null,
+    currentOffer: null,
+    offerReviews: [],
     isOfferLoading: false,
     isOfferNotFound: false,
 };
@@ -54,13 +54,13 @@ const reducer = createReducer(initialState, (builder) => {
             state.isOffersDataLoading = action.payload;
         })
         .addCase(setUserData, (state, action: PayloadAction<UserData>) => {
-            state.userData = action.payload; // Handle userData updates
+            state.user = action.payload; // Handle user updates
         })
         .addCase(setOffer, (state, action: PayloadAction<FullOffer>) => {
-            state.offer = action.payload;
+            state.currentOffer = action.payload;
         })
         .addCase(setComments, (state, action: PayloadAction<Review[]>) => {
-            state.comments = action.payload;
+            state.offerReviews = action.payload;
         })
         .addCase(setOfferLoadingStatus, (state, action: PayloadAction<boolean>) => {
             state.isOfferLoading = action.payload;
@@ -71,13 +71,13 @@ const reducer = createReducer(initialState, (builder) => {
         .addMatcher(
             (action) => action.type === 'data/fetchOffer/fulfilled',
             (state, action: PayloadAction<FullOffer>) => {
-                state.offer = action.payload;
+                state.currentOffer = action.payload;
             }
         )
         .addMatcher(
             (action) => action.type === 'data/fetchComments/fulfilled',
             (state, action: PayloadAction<Review[]>) => {
-                state.comments = action.payload;
+                state.offerReviews = action.payload;
             }
         );
 });

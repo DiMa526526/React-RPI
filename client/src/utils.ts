@@ -26,7 +26,7 @@ export function sortOffersByType(
       return sorted.sort((a, b) => a.price - b.price);
     case SortOffersType.PriceToLow:
       return sorted.sort((a, b) => b.price - a.price);
-    case SortOffersType.TopRated:
+    case SortOffersType.Popular:
       return sorted.sort((a, b) => b.rating - a.rating);
     default:
       return sorted;

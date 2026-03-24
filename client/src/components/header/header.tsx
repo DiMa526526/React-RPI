@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 function Header() {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const userData = useAppSelector((state) => state.userData);
+  const userData = useAppSelector((state) => state.user);
   const favoriteOffers = useAppSelector(selectFavoriteOffers);
   const dispatch = useAppDispatch();
 
