@@ -31,11 +31,16 @@ paths:
                 - email
                 - password
               properties:
+                username:
+                  type: string
+                  example: Gayle.Brekke54
                 email:
                   type: string
                   format: email
+                  example: Muriel.Gottlieb99@yahoo.com
                 password:
                   type: string
+                  example: YIdGvKcfKm
                 avatar:
                   type: string
                   format: binary
@@ -66,8 +71,8 @@ paths:
                 password:
                   type: string
             example:
-              email: Dovie43@gmail.com
-              password: 6oNqOzYl7f
+              email: Carolyn.Buckridge-Sanford@yahoo.com
+              password: KTSGNedPvd
       responses:
         "200":
           description: Успешный логин, возвращает токен
@@ -131,19 +136,29 @@ paths:
               properties:
                 title:
                   type: string
+                  example: suppellex caritas delinquo
                 description:
                   type: string
+                  example: Theca vomer cimentarius candidus uredo cupio distinctio cicuta tribuo.
+                    Vos patruus degero bene callide atque bos dens depromo.
+                    Eaque vulgus contigo bos delectus claro tabula statua
+                    calamitas.
                 publishDate:
                   type: string
                   format: date
+                  example: 2026-03-24
                 city:
                   type: string
+                  example: Paris
                 isPremium:
                   type: boolean
+                  example: true
                 isFavorite:
                   type: boolean
+                  example: false
                 rating:
                   type: number
+                  example: 2.2
                 type:
                   type: string
                   enum:
@@ -151,23 +166,30 @@ paths:
                     - house
                     - room
                     - hotel
+                  example: hotel
                 rooms:
                   type: integer
+                  example: 1
                 guests:
                   type: integer
+                  example: 1
                 price:
                   type: number
+                  example: 174
                 features:
                   type: string
-                  description: JSON-строка массива из значений 'Breakfast', 'Air conditioning',
-                    'Laptop friendly workspace', 'Baby seat', 'Washer',
-                    'Towels', 'Fridge'
+                  description: JSON-строка массива из значений 'Air conditioning', 'Laptop
+                    friendly workspace', 'Washer', 'Towels', 'Fridge'
+                  example: '["Air conditioning","Laptop friendly workspace", "Washer","Towels","Fridge"]'
                 commentsCount:
                   type: integer
+                  example: 42
                 latitude:
                   type: number
+                  example: 79.5502
                 longitude:
                   type: number
+                  example: 26.5944
                 previewImage:
                   type: string
                   format: binary
@@ -269,10 +291,14 @@ paths:
               properties:
                 comment:
                   type: string
+                  example: Solitudo nulla decretum capio spiritus despecto necessitatibus. Dolorem
+                    cometes animus cura uter. Addo excepturi vinculum vomito
+                    curiositas cuppedia delectus.
                 rating:
                   type: number
                   minimum: 1
                   maximum: 5
+                  example: 4
       responses:
         "201":
           description: Отзыв успешно создан

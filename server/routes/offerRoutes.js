@@ -9,7 +9,7 @@ router.get('/offers', getAllOffers);
 router.post('/offers', upload.fields([
     { name: 'previewImage', maxCount: 1 },
     { name: 'photos', maxCount: 6 }
-]), createOffer);
+]), authenticateToken, createOffer);
 router.get('/offers/:id', getFullOffer);
 router.post('/offers/favorite/:offerId/:status', authenticateToken, toggleFavorite);
 

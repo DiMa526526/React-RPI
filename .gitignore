@@ -1,0 +1,9 @@
+# Ignored by user request
+# Environment files
+server/.env
+# Node modules
+server/node_modules/
+client/node_modules/
+# Unnecessary mock files
+client/mocks/offers-rus.txt
+client/mocks/requsets.txt

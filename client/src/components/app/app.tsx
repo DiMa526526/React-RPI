@@ -5,9 +5,6 @@ import { Login } from "../../pages/login/login";
 import { Favorites } from "../../pages/favorites/favorites";
 import { Offer } from "../../pages/offer/offer";
 import { NotFound } from "../../pages/not-found/not-found";
-import { offersList } from "../../mocks/offers-list";
-import { offers } from "../../mocks/offers";
-import { ReviewList } from "../../mocks/mock-reviews";
 import { PrivateRoute } from "../private-route/private-route";
 import { useAppSelector } from "../../hooks";
 import { LoadingPage } from "../../pages/loading-page/LoadingPage"

@@ -13,6 +13,21 @@ function genLoginExample() {
   };
 }
 
+function genRegisterExample() {
+  return {
+    username: faker.internet.username(),
+    email: faker.internet.email(),
+    password: faker.internet.password({ length: 10 }),
+  };
+}
+
+function genReviewExample() {
+  return {
+    comment: faker.lorem.paragraph(),
+    rating: Number(faker.number.float({ min: 1, max: 5, fractionDigits: 1 })),
+  };
+}
+
 
 
 
@@ -52,20 +67,57 @@ function genOfferExample() {
 ]),
     commentsCount: faker.number.int({ min: 0, max: 50 }),
     latitude: Number(faker.location.latitude()),
-    longitude: Number(faker.location.longitude()),
-    userId: faker.number.int({ min: 1, max: 10 })
+    longitude: Number(faker.location.longitude())
   };
 }
 
-const offerContent =
-doc?.paths?.["/offer"]?.post?.requestBody?.content?.["multipart/form-data"];
+const offerContent = doc?.paths?.["/offers"]?.post?.requestBody?.content?.["multipart/form-data"]?.schema;
 
+if (offerContent?.properties) {
+  const example = genOfferExample();
 
-if (offerContent) {
-offerContent.examples = {
-generated: {
-summary: "Сгенерированный пример (только текстовые поля)",
-value: genOfferExample(),
-},
-};
+  for (const key in example) {
+    if (offerContent.properties[key]) {
+      offerContent.properties[key].example = example[key];
+    }
+  }
+
+  console.log("Example для POST /offers");
+} else {
+  console.error("Не найден /offers POST requestBody content multipart/form-data schema");
 }
+
+const registerContent = doc?.paths?.["/register"]?.post?.requestBody?.content?.["multipart/form-data"]?.schema;
+
+if (registerContent?.properties) {
+  const example = genRegisterExample();
+
+  for (const key in example) {
+    if (registerContent.properties[key]) {
+      registerContent.properties[key].example = example[key];
+    }
+  }
+
+  console.log("Example для POST /register");
+} else {
+  console.error("Не найден /register POST requestBody content multipart/form-data schema");
+}
+
+const reviewContent = doc?.paths?.["/reviews/{offerId}"]?.post?.requestBody?.content?.["application/json"];
+
+if (reviewContent?.schema?.properties) {
+  const example = genReviewExample();
+
+  for (const key in example) {
+    if (reviewContent.schema.properties[key]) {
+      reviewContent.schema.properties[key].example = example[key];
+    }
+  }
+
+  console.log("Example для POST /reviews/{offerId}");
+} else {
+  console.error("Не найден /reviews/{offerId} POST requestBody content application/json schema");
+}
+
+fs.writeFileSync(SWAGGER_PATH, YAML.stringify(doc), "utf-8");
+console.log("\nГотово! Все примеры записаны в", SWAGGER_PATH);
